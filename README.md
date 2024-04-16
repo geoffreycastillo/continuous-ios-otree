@@ -1,1 +1,1 @@
-otree_social_distance
+This repository provides the oTree code for [Beranek and Castillo 'Continuous Inclusion of Other in the Self'](https://geoffreycastillo.com/pdf/Beranek,Castillo-Continuous-Inclusion-of-Other-in-the-Self.pdf).
