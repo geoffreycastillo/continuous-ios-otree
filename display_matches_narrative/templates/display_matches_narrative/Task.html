@@ -1,0 +1,48 @@
+{% extends "global/PageCard.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        .narrative-card .image {
+            content: url("{% static ''|add:name|lower|add:'.png' %}");
+        }
+
+        .otree-title {
+            display: none;
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        const maxlength = {{ Constants.length_tweet |json }};
+
+        $('.field-tweet').append("<small class='form-text text-muted' id='tweet-count'>0/{{ Constants.length_tweet |json }}</small>");
+
+        $('#id_tweet').on("input", function () {
+            let currentLength = $(this).val().length;
+            $('#tweet-count').html(currentLength + "/" + maxlength);
+        });
+    </script>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-md-5">
+                {% include 'global/CardSnippet.html' with name=name narrative=narrative|linebreaks %}
+            </div>
+            <div class="col-md-7">
+                {% formfields %}
+            </div>
+        </div>
+    </div>
+
+    {% next_button %}
+{% endblock %}
+
+

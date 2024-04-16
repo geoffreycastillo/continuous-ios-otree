@@ -1,0 +1,31 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Task
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md">
+                {% for label_field in labels_and_fields %}
+                    {% if forloop.counter <= 5 %}
+                        {% include 'filler/FillerSnippet.html' %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-md">
+                {% for label_field in labels_and_fields %}
+                    {% if forloop.counter > 5 %}
+                        {% include 'filler/FillerSnippet.html' %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% next_button %}
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Instructions
+{% endblock %}
+
+{% block content %}
+
+    <p>
+        On the following page, you will see 10 math problems involving the addition or subtraction of three-digit numbers.
+        We will award you a bonus of {{ Constants.payment_per_question|c }} per problem correctly solved within {{ timeout|floatformat:0 }} minutes.
+        This bonus will be in addition to the flat fee of {{ session.config.participation_fee | c }} you receive upon completion of the HIT.
+    </p>
+
+    {% next_button %}
+
+{% endblock %}

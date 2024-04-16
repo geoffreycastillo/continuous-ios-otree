@@ -1,0 +1,222 @@
+{% extends "survey/PageQuestions.html" %}
+{% load otree static %}
+
+{% block scripts %}
+
+    {{ form.media }}
+
+    <script>
+        window.onload = function () {
+            Show('children', [
+                [['children_0'], ['children_number', 'children_first_age']]
+            ]);
+            Show('language', [
+                [['language_10'], ['language_other']]
+            ]);
+            Show('ethnicity', [
+                [['ethnicity_0'], ['ethnicity_choice']]
+            ]);
+            Show('ethnicity_choice', [
+                [['ethnicity_choice_3'], ['ethnicity_choice_other']]
+            ]);
+            Show('race', [
+                    [['race_2'], ['race_indian_other']],
+                    [['race_6'], ['race_asian_other']],
+                    [['race_13'], ['race_islander_other']],
+                    [['race_14'], ['race_other']]
+                ]
+            );
+            Show('religion', [
+                [['religion_0'], ['religion_denomination']]
+            ]);
+            Show('religion_denomination', [
+                [['religion_denomination_8'], ['religion_denomination_other']]
+            ]);
+            Show('country_growing_up',
+                [
+                    [['country_growing_up_0'], ['us_state_grow_up']],
+                    [['country_growing_up_1'], ['another_country_grow_up']]
+                ]);
+            Show('us_citizen',
+                [
+                    [['us_citizen_0'], ['us_citizen_options']]
+                ])
+        };
+
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        });
+
+        document.getElementById('id_ethnicity').addEventListener('change', function () {
+            if (!document.getElementById('id_ethnicity_0').checked) {
+                document.getElementById('id_ethnicity_choice_other').required = false;
+                document.getElementsByClassName('ethnicity_choice_3')[0].style.display = 'none';
+                document.getElementById('id_ethnicity_choice_other').value = "";
+            }
+        });
+
+        document.getElementById('id_religion').addEventListener('change', function () {
+            if (!document.getElementById('id_religion_0').checked) {
+                document.getElementById('id_religion_denomination_other').required = false;
+                document.getElementsByClassName('religion_denomination_8')[0].style.display = 'none';
+                document.getElementById('id_religion_denomination_other').value = "";
+            }
+        });
+
+    </script>
+
+
+{% endblock %}
+
+{% block content %}
+
+    {% formfield player.sex %}
+
+    {% formfield player.date %}
+
+    {% formfield player.marital %}
+
+    {% formfield player.children %}
+
+    <div class="hidden children_0">
+        {% formfield player.children_number %}
+
+        {% formfield player.children_first_age %}
+    </div>
+
+    <div class="form-group required">
+        <label class="col-form-label" for="id_language_0">{{ form.language.label }}</label>
+        <div class="controls  field-language">
+            <ul id="id_language">
+                {% for radio in form.language %}
+                    <li>
+                        {% if forloop.counter0 == 10 %}
+                            {{ radio }}
+                            <div class="hidden language_10">
+                                {% formfield player.language_other %}
+                            </div>
+                        {% else %}
+                            {{ radio }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% formfield player.zip %}
+
+
+    {% formfield player.ethnicity %}
+
+    <div class="hidden ethnicity_0">
+        <div class="form-group">
+            <label class="col-form-label" for="id_ethnicity_choice_0">{{ form.ethnicity_choice.label }}</label>
+            <div class="controls  field-ethnicity_choice">
+                <ul id="id_ethnicity_choice">
+                    {% for radio in form.ethnicity_choice %}
+                        <li>
+                            {% if forloop.counter0 == 3 %}
+                                {{ radio }}
+                                <div class="hidden ethnicity_choice_3">
+                                    {% formfield player.ethnicity_choice_other %}
+                                </div>
+                            {% else %}
+                                {{ radio }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group required">
+        <label class="col-form-label" for="id_race_0">{{ form.race.label }}</label>
+        <div class="controls  field-race">
+            <ul id="id_race">
+                {% for radio in form.race %}
+                    <li>
+                        {% if forloop.counter0 == 2 %}
+                            {{ radio }}
+                            <div class="hidden race_2">
+                                {% formfield player.race_indian_other %}
+                            </div>
+                        {% elif forloop.counter0 == 6 %}
+                            {{ radio }}
+                            <div class="hidden race_6">
+                                {% formfield player.race_asian_other %}
+                            </div>
+                        {% elif forloop.counter0 == 13 %}
+                            {{ radio }}
+                            <div class="hidden race_13">
+                                {% formfield player.race_islander_other %}
+                            </div>
+                        {% elif forloop.counter0 == 14 %}
+                            {{ radio }}
+                            <div class="hidden race_14">
+                                {% formfield player.race_other %}
+                            </div>
+                        {% else %}
+                            {{ radio }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% formfield player.religion %}
+
+    <div class="hidden religion_0">
+        <div class="form-group">
+            <label class="col-form-label"
+                   for="id_religion_denomination_0">{{ form.religion_denomination.label }}</label>
+            <div class="controls  field-religion_denomination">
+                <ul id="id_religion_denomination">
+                    {% for radio in form.religion_denomination %}
+                        <li>
+                            {% if forloop.counter0 == 1 %}
+                                {{ radio }}
+                                <button type="button" class="btn btn-link" data-container="body" aria-label="Help"
+                                        data-toggle="popover" data-placement="right" data-trigger="hover"
+                                        data-content="Protestant includes denominations such as Baptist, Nondenominational Protestant, Methodist, Pentecostal, Lutheran, Presbyterian, Episcopalian/Anglican, Congregationalist, Adventist, Anabaptist, other Evangelical/Fundamentalist, other Reformed, etc.">
+                                    <span>(?)</span>
+                                </button>
+                            {% elif forloop.counter0 == 8 %}
+                                {{ radio }}
+                                <div class="hidden religion_denomination_8">
+                                    {% formfield player.religion_denomination_other %}
+                                </div>
+                            {% else %}
+                                {{ radio }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% formfield player.country_growing_up %}
+
+    <div class="hidden country_growing_up_0">
+        {% formfield player.us_state_grow_up %}
+    </div>
+
+    <div class="hidden country_growing_up_1">
+        {% formfield player.another_country_grow_up %}
+    </div>
+
+    {% formfield player.us_citizen %}
+
+    <div class="hidden us_citizen_0">
+        {% formfield player.us_citizen_options %}
+    </div>
+
+
+    {% next_button %}
+
+{% endblock %}
+
+

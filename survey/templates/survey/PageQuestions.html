@@ -1,0 +1,109 @@
+{% extends "survey/Page.html" %}
+{% load otree %}
+
+{% block app_styles %}
+
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .religion_0 .btn {
+            padding: 0px;
+        }
+    </style>
+
+
+{% endblock %}
+
+{% block app_scripts %}
+
+    <script>
+        {#    CAREFUL WITH THIS FUNCTION#}
+        {#        IF a field depends on another one (e.g. do you have a religion: if yes, show the denomination question)#}
+        {#        and if this field itself has a dependent field then we should care of it by hand #}
+
+        function Show(parent_listener, conditions_and_fields_to_show) {
+            const conditions = conditions_and_fields_to_show;
+            const parent_listener_div = "id_" + parent_listener;
+            {# parent_div: the id of the div that contains the condition that should trigger the show/hide of the children, as well as the other condition #}
+            {# child_to_show: an array of arrays, where for each array: #}
+            {#     the first element is the condition which, if true, should trigger the display of the child #}
+            {#     the second element is the id of the div of the child that is initially hiden #}
+
+            {# retrieve the state and show the children questions if the user had already answered yes before but for a reason refreshed #}
+            for (condition = 0; condition < conditions.length; condition++) {
+                {# get a list of all divs to show #}
+                const divs_to_show = document.getElementsByClassName(conditions[condition][0][0]);
+                {# retrieve state from the browser #}
+                if (sessionStorage.getItem(conditions[condition][0][0]) == "True") {
+                    for (div = 0; div < divs_to_show.length; div++) {
+                        divs_to_show[div].style.display = 'block';
+                    }
+                }
+            }
+
+            {# add a listener: when the parent changes we do something #}
+            document.getElementById(parent_listener_div).addEventListener('change', function () {
+                    for (condition = 0; condition < conditions.length; condition++) {
+                        {# get a list of all divs to show and of all the conditions #}
+                        const divs_to_show = document.getElementsByClassName(conditions[condition][0][0]);
+                        const num_cond = conditions[condition][0].length;
+
+                        {# if the condition is satisfied #}
+                        if (
+                            (num_cond == 1 && document.getElementById("id_" + conditions[condition][0][0]).checked) || (num_cond == 2 && (document.getElementById("id_" + conditions[condition][0][0]).checked || document.getElementById("id_" + conditions[condition][0][1]).checked))
+                        ) {
+                            {# store state in the browser #}
+                            sessionStorage.setItem(conditions[condition][0][0], "True");
+                            {# show the children #}
+                            for (div = 0; div < divs_to_show.length; div++) {
+                                divs_to_show[div].style.display = 'block';
+                            }
+                            for (field = 0; field < conditions[condition][1].length; field++) {
+                                const inputs = document.getElementsByName(conditions[condition][1][field]);
+                                {# mark the input as required #}
+                                for (input = 0; input < inputs.length; input++) {
+                                    inputs[input].required = true;
+                                }
+                            }
+                            {# if the condition is NOT satisfied #}
+                        } else if (
+                            (num_cond == 1 && !document.getElementById("id_" + conditions[condition][0][0]).checked) || (num_cond == 2 && !document.getElementById("id_" + conditions[condition][0][0]).checked && !document.getElementById("id_" + conditions[condition][0][1]).checked)
+                        ) {
+                            {# store state in the browser #}
+                            sessionStorage.setItem(conditions[condition][0][0], "False");
+                            {# hide the children #}
+                            for (div = 0; div < divs_to_show.length; div++) {
+                                divs_to_show[div].style.display = 'none';
+                            }
+                            for (field = 0; field < conditions[condition][1].length; field++) {
+                                const inputs = document.getElementsByName(conditions[condition][1][field]);
+                                for (input = 0; input < inputs.length; input++) {
+                                    {# mark the input as NOT required #}
+                                    inputs[input].required = false;
+                                    {# cleanup the data that was erroneously entered #}
+                                    {# need to look at the date to clean intelligently #}
+                                    if (inputs[input].type == "radio") {
+                                        inputs[input].checked = false;
+                                    }
+                                    if (inputs[input].tagName == "SELECT") {
+                                        inputs[input].selectedIndex = 0;
+                                    }
+                                    if (inputs[input].type == "text" || inputs[input].type == "number") {
+                                        inputs[input].value = "";
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            );
+        }
+    </script>
+{% endblock %}
+
+{% block title %}
+    Survey: Part {{ current_page }} of {{ total_page }}
+{% endblock %}

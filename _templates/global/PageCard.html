@@ -1,0 +1,44 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block app_styles %}
+    <style>
+        .narrative-card {
+            width: 270px;
+            height: calc(270px * 1.4);
+            margin: 0 auto;
+        }
+
+        .narrative-card .card-text {
+            text-align: left;
+            z-index: 2;
+        }
+
+        .narrative-card .image {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            height: 150px;
+            max-height: 66%;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        #image-club {
+            content: url("{% static 'club.png' %}");
+        }
+
+        #image-heart {
+            content: url("{% static 'heart.png' %}");
+        }
+
+        #image-diamond {
+            content: url("{% static 'diamond.png' %}");
+        }
+
+        #image-spade {
+            content: url("{% static 'spade.png' %}");
+        }
+    </style>
+
+{% endblock %}

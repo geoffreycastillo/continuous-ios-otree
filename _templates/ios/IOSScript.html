@@ -1,0 +1,102 @@
+{% load otree static %}
+
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+<script src="{% static 'ios/ios.js' %}"></script>
+
+<script>
+    function ready(fn) {
+        if (document.readyState != 'loading') {
+            fn();
+        } else {
+            document.addEventListener('DOMContentLoaded', fn);
+        }
+    }
+
+    function getIOSAndSetInput(ios, ios_distance_input, ios_overlap_input, ios_number_input) {
+        ios_distance_input.value = ios.proportionDistance;
+        ios_overlap_input.value = ios.proportionOverlap;
+
+        if (ios_number_input) {
+            ios_number_input.value = ios.currentCircle;
+        }
+    }
+
+
+    /**
+     * Function to run when DOM is ready
+     */
+    function createIOS() {
+        const otree_next_button = document.querySelector('.otree-btn-next');
+
+        const ios = new Ios({
+                el: 'ios',
+                buttonsClass: 'btn btn-outline-secondary ios-button',
+                other: '{{ name|default:'Participant' }}',
+                {{ ios_options|safe }}
+            })
+        ;
+
+
+        const ios_distance_input = document.getElementById('ios_distance');
+        const ios_overlap_input = document.getElementById('ios_overlap');
+        const ios_number_input = document.getElementById('ios_number');
+        const ios_buttons = document.querySelectorAll('.ios-button')
+
+        // we check whether the hidden input buttons are there
+        // if not > that's the intro
+        if (!ios_distance_input && !ios_overlap_input) {
+            {% if not is_ios_pictures %}
+                otree_next_button.classList.add('invisible');
+
+                document.getElementById('ios').addEventListener(
+                    'click',
+                    () => {
+                        if (ios.proportionOverlap > 0.75) {
+                            otree_next_button.classList.remove('invisible');
+                        }
+                    }
+                )
+            {% endif %}
+        }
+        // the hidden inputs are there so we're in a task
+        else {
+            // do we have IOS pictures?
+            // if not we're in the contunous case or in the discrete case
+            if (!ios_buttons[0]) {
+                // initialise the hidden inputs with the status quo values
+                getIOSAndSetInput(ios, ios_distance_input, ios_overlap_input, ios_number_input)
+                document.getElementById('ios').addEventListener(
+                    'mousedown',
+                    () => {
+                        window.addEventListener(
+                            'mouseup',
+                            () => {
+                                getIOSAndSetInput(ios, ios_distance_input, ios_overlap_input, ios_number_input);
+                            },
+                            false)
+                    }, false
+                );
+            } else {
+                // we have the pictures
+                otree_next_button.classList.add('invisible');
+                for (const iosButton of ios_buttons) {
+                    iosButton.addEventListener(
+                        'click',
+                        function (event) {
+                            const pairNumber = iosButton.value;
+                            ios_distance_input.value = ios.distanceOverlapPictures[pairNumber - 1].proportionDistance;
+                            ios_overlap_input.value = ios.distanceOverlapPictures[pairNumber - 1].proportionOverlap;
+                            ios_number_input.value = pairNumber;
+                            otree_next_button.classList.remove('invisible');
+                        }
+                    )
+                }
+            }
+        }
+
+
+    }
+
+    ready(createIOS())
+
+</script>

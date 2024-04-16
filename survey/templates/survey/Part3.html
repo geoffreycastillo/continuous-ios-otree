@@ -1,0 +1,92 @@
+{% extends "survey/PageQuestions.html" %}
+{% load otree static %}
+
+{% block scripts %}
+    <script>
+        window.onload = function () {
+            Show('political_party', [
+                [['political_party_3'], ['other_political_party']],
+            ])
+        }
+    </script>
+{% endblock %}
+
+{% block styles %}
+
+    <style>
+
+        .table .form-check-input {
+            margin-left: 0;
+        }
+
+
+    </style>
+
+{% endblock %}
+
+
+{% block content %}
+
+    {% for field in form.visible_fields|slice:":2" %}
+        {% formfield field %}
+    {% endfor %}
+
+
+    <div class="form-group required">
+        <label class="col-form-label" for="id_political_party_0">{{ form.political_party.label }}</label>
+        <div class="controls  field-political_party">
+            <ul id="id_political_party">
+                {% for radio in form.political_party %}
+                    <li>
+                        {% if forloop.counter0 == 3 %}
+                            {{ radio }}
+                            <div class="hidden political_party_3">
+                                {% formfield player.other_political_party %}
+                            </div>
+                        {% else %}
+                            {{ radio }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% formfield player.politcal_views %}
+
+    <div class="col-form-label">
+        The table below lists some institutions in this country. As far as the people running these institutions are
+        concerned, would you say you currently have a great deal of confidence, only some confidence, or hardly any
+        confidence at all in them?
+    </div>
+
+    <table class="table table-hover table-responsive">
+        <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Hardly any confidence at all</th>
+            <th scope="col">Only some confidence</th>
+            <th scope="col">A great deal of confidence</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for field in form.visible_fields|slice:"5:" %}
+            <tr>
+                <th scope="row">
+                    {{ field.label }}
+                </th>
+                {% for radio in field %}
+                    <td>
+                        {{ radio.tag }}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% next_button %}
+
+{% endblock %}
+
+

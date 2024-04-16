@@ -1,0 +1,93 @@
+{% extends "global/PageCard.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        .suit {
+            color: red;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}
+    Instructions
+{% endblock %}
+
+{% block content %}
+
+    <p>
+        Previously, we invited several hundred participants to complete the same survey as you.
+        Out of that group, we selected
+        {% if number_matches == 1 %}
+            one participant
+        {% else %}
+            {{ number_matches }} participants
+        {% endif %}
+        and display some of their responses here.
+    </p>
+
+    <p>
+        In order to more easily refer to them we have randomly associated
+        {% if number_matches == 1 %}
+            this participant
+        {% else %}
+            each
+        {% endif %}
+        with one of the four suits from a deck of playing cards:
+        Spade (♠), Club (♣), Heart (<span class="suit">♥</span>), and Diamond (<span class="suit">♦</span>).
+    </p>
+
+    <p>
+        We will represent
+        {% if number_matches == 1 %}
+            this participant
+        {% else %}
+            these participants
+        {% endif %}
+        and some of their answers to the survey with the following
+        {% if number_matches == 1 %}
+            card:
+        {% else %}
+            cards:
+        {% endif %}
+    </p>
+
+    <div class="container my-4">
+        <div class="row">
+            {% for match in matches %}
+                <div class="col my-2">
+                    {% include 'global/CardSnippet.html' with name=match.name narrative=match.narrative|linebreaks %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <p>
+        For the rest of the study, you will complete tasks involving
+        {% if number_matches == 1 %}
+            this participant
+        {% else %}
+            these {{ number_matches }} participants
+        {% endif %}
+        and they will remain the same throughout.
+    </p>
+
+    <p>
+        In the next
+        {% if number_matches == 1 %}
+            page
+        {% else %}
+            pages
+        {% endif %}
+        we will ask you to consider
+        {% if number_matches == 1 %}
+            this participant
+        {% else %}
+            these participants one by one
+        {% endif %}
+        and write a few words about them.
+    </p>
+
+    {% next_button %}
+
+{% endblock %}

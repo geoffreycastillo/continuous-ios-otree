@@ -1,0 +1,137 @@
+{% extends "survey/PageQuestions.html" %}
+{% load otree static %}
+
+{% block scripts %}
+
+    <script>
+        window.onload = function () {
+            Show('home', [
+                [['home_7'], ['home_other']]
+            ]);
+            Show('highest_degree', [
+                [['highest_degree_1'], ['elementary_secondary_choices']],
+                [['highest_degree_3'], ['high_school_choices']],
+                [['highest_degree_4'], ['college_choices', 'major_college']],
+                [['highest_degree_5'], ['after_bachelor_choices', 'major_bachelor']],
+            ]);
+            Show('elementary_secondary_choices', [
+                [['elementary_secondary_choices_2'], ['elementary_secondary_choices_incomplete_high_school']]
+            ]);
+            Show('work_last_week', [
+                [['work_last_week_0', 'work_last_week_1'], ['profession', 'employer', 'work_tasks']],
+            ])
+
+        };
+        document.getElementById('id_highest_degree').addEventListener('change', function () {
+            if (!document.getElementById('id_highest_degree_1').checked) {
+                document.getElementById('special_div').style.display = 'none';
+                document.getElementById('id_elementary_secondary_choices_incomplete_high_school').required = false;
+                document.getElementById('id_elementary_secondary_choices_incomplete_high_school').value = "";
+            }
+        })
+    </script>
+
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="form-group required">
+        <label class="col-form-label" for="home">{{ form.home.label }}</label>
+        <div class="controls  field-home">
+            <ul id="id_home">
+                {% for radio in form.home %}
+                    <li>
+                        {% if forloop.counter0 == 7 %}
+                            {{ radio }}
+                            <div class="hidden home_7">
+                                {% formfield player.home_other %}
+                            </div>
+                        {% else %}
+                            {{ radio }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% formfield player.guns %}
+
+    {% formfield player.place_growing_up %}
+
+    <div class="form-group required">
+        <label class="col-form-label" for="highest_degree">What is the <strong>highest</strong> degree or level of
+            school you have COMPLETED? If currently enrolled, mark the previous grade or highest degree
+            received.</label>
+        <div class="controls  field-highest_degree">
+            <ul id="id_highest_degree">
+                {% for radio in form.highest_degree %}
+                    <li>
+                        {% if forloop.counter0 == 1 %}
+                            {{ radio }}
+                            <div class="hidden highest_degree_1">
+                                {{ form.elementary_secondary_choices }}
+                            </div>
+                        {% elif forloop.counter0 == 3 %}
+                            {{ radio }}
+                            <div class="hidden highest_degree_3">
+                                {{ form.high_school_choices }}
+                            </div>
+                        {% elif forloop.counter0 == 4 %}
+                            {{ radio }}
+                            <div class="hidden highest_degree_4">
+                                {{ form.college_choices }}
+                            </div>
+                        {% elif forloop.counter0 == 5 %}
+                            {{ radio }}
+                            <div class="hidden highest_degree_5">
+                                {{ form.after_bachelor_choices }}
+                            </div>
+                        {% else %}
+                            {{ radio }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="hidden elementary_secondary_choices_2" id="special_div">
+        {% formfield player.elementary_secondary_choices_incomplete_high_school %}
+    </div>
+
+    <div class="hidden highest_degree_4">
+        {% formfield player.major_college %}
+    </div>
+
+    <div class="hidden highest_degree_5">
+        {% formfield player.major_bachelor %}
+    </div>
+
+
+    {% formfield player.work_last_week %}
+
+    <div class="hidden work_last_week_0">
+        {% formfield player.profession %}
+
+        {% formfield player.employer %}
+
+        {% formfield player.work_tasks %}
+
+    </div>
+
+    {% formfield player.unemployed_10_years %}
+
+    {% formfield player.labor_union %}
+
+    {% for field in form.visible_fields|slice:"18:" %}
+        {% formfield field %}
+    {% endfor %}
+
+
+    {% next_button %}
+
+{% endblock %}
+
+

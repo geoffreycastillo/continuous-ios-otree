@@ -1,0 +1,30 @@
+.item {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.btn-outline-secondary {
+    color: Black;
+    border-color: transparent;
+}
+
+.circle {
+    border-style: solid;
+    border-color: Black;
+    border-radius: 50%;
+}
+
+.left-text, .right-text {
+    min-width: 40px;
+}
+
+.left-text {
+    margin-right: 5px;
+    text-align: right;
+}
+
+.right-text {
+    margin-left: 5px;
+    text-align: left;
+}

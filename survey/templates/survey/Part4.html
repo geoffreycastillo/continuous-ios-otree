@@ -1,0 +1,62 @@
+{% extends "survey/PageQuestions.html" %}
+{% load otree static %}
+
+{% block styles %}
+
+    <style>
+
+        table .form-check-input {
+            margin-left: 0;
+        }
+
+
+    </style>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="col-form-label">
+        We are faced with many problems in this country. For those listed in the table below, do you think that we are
+        spending too much, too little, or about the right amount on them?
+    </div>
+
+    <table class="table table-hover table-responsive">
+        <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Spending too much</th>
+            <th scope="col">Spending the right amount</th>
+            <th scope="col">Spending too little</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for field in form.visible_fields|slice:":3" %}
+            <tr>
+                <th scope="row">
+                    {{ field.label }}
+                </th>
+                {% for radio in field %}
+                    <td>
+                        {{ radio.tag }}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% for field in form.visible_fields|slice:"3:" %}
+        {% formfield field %}
+    {% endfor %}
+
+    {% next_button %}
+
+{% endblock %}
+
+

@@ -1,0 +1,76 @@
+{% extends "global/PageCard.html" %}
+{% load otree static %}
+
+{% block styles %}
+
+    <style>
+        .narrative-card .image {
+            content: url("{% static ''|add:name|lower|add:'.png' %}");
+        }
+    </style>
+
+    {% include 'ios/IOSStyle.html' %}
+
+
+
+{% endblock %}
+
+{% block scripts %}
+    {% include 'ios/IOSScript.html' %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col">
+                <p>
+                    In this task we ask you to
+                    {% if is_ios_continuous %}
+                        shift the circles to
+                    {% elif is_ios_discrete %}
+                        choose a pair of circles that
+                    {% endif %}
+                    best represents your connection with {{ name }}.
+                </p>
+
+                <div class="my-2">
+                    {% include 'global/CardSnippet.html' with name=name narrative=narrative|linebreaks %}
+                </div>
+            </div>
+            <div class="col-lg-8 d-flex flex-column">
+                <p>
+                    {% if is_ios_continuous %}
+                        Click on the left circle, drag it to the right and drop it when the circles
+                    {% elif is_ios_discrete %}
+                        Select the pair of circles which
+                    {% endif %}
+                    indicate to what extent you and {{ name }} are connected.
+                </p>
+
+                <div class="d-flex justify-content-center m-2">
+                    <div id="ios"></div>
+                </div>
+
+
+                <p>
+                    Then, click on the 'Next' button.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    {% next_button %}
+
+
+
+    <input type="hidden" id="ios_distance" name="ios_distance"/>
+    <input type="hidden" id="ios_overlap" name="ios_overlap"/>
+    {% if is_ios_discrete %}
+        <input type="hidden" id="ios_number" name="ios_number"/>
+    {% endif %}
+
+
+
+{% endblock %}
